@@ -44,15 +44,15 @@ def check_csv_files(file_path, csv_files, keyword):
                 keyword_column = column
                 match = re.search(r'".*"', column)
                 if match:
-                    correct_value = match.group(0)
+                    correct_value = match.group(0).strip('"').lower()
                 break
         
         if keyword_column and correct_value:
             # Check each row for the correct value
             for index, row in df.iterrows():
                 value = row[keyword_column]
-                if not (isinstance(value, str) and value == correct_value):
-                    incorrect_responses.append(row['Response ID'])
+                if not (isinstance(value, str) and value.strip('"').lower() == correct_value):
+                    incorrect_responses.append({'Response ID': row['Response ID'], 'File Name': csv_file})
     
     return incorrect_responses
 
@@ -60,7 +60,7 @@ def check_csv_files(file_path, csv_files, keyword):
 incorrect_responses = check_csv_files(file_path, csv_files, keyword)
 
 # Create a DataFrame for the incorrect responses
-incorrect_responses_df = pd.DataFrame(incorrect_responses, columns=['Response ID'])
+incorrect_responses_df = pd.DataFrame(incorrect_responses)
 
 # Save the incorrect responses to a CSV file
 output_file = os.path.join(file_path, 'incorrect_responses.csv')
