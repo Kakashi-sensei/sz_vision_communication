@@ -23,11 +23,12 @@ csv_files = [
     "Day_7_LVC_Afternoon_Survey_June_28_2024_23_07.csv"
 ]
 
-# Define the keyword
-keyword = "To ensure that you are paying attention"
+# Define the keywords
+attention_keyword = "To ensure that you are paying attention"
+prolific_id_keyword = "What is your Prolific ID"
 
 # Function to check each CSV file
-def check_csv_files(file_path, csv_files, keyword):
+def check_csv_files(file_path, csv_files, attention_keyword, prolific_id_keyword):
     incorrect_responses = []
     
     for csv_file in csv_files:
@@ -36,28 +37,40 @@ def check_csv_files(file_path, csv_files, keyword):
         # Read the CSV file, skip the first and third rows, and use the second row as header
         df = pd.read_csv(full_path, skiprows=[0, 2])
         
-        # Find the column with the keyword and extract the correct value
-        keyword_column = None
+        # Find the column with the attention keyword and extract the correct value
+        attention_column = None
         correct_value = None
         for column in df.columns:
-            if keyword in column:
-                keyword_column = column
+            if attention_keyword in column:
+                attention_column = column
                 match = re.search(r'".*"', column)
                 if match:
                     correct_value = match.group(0).strip('"').lower()
                 break
         
-        if keyword_column and correct_value:
+        # Find the column with the prolific ID keyword
+        prolific_id_column = None
+        for column in df.columns:
+            if prolific_id_keyword in column:
+                prolific_id_column = column
+                break
+        
+        if attention_column and correct_value:
             # Check each row for the correct value
             for index, row in df.iterrows():
-                value = row[keyword_column]
+                value = row[attention_column]
                 if not (isinstance(value, str) and value.strip('"').lower() == correct_value):
-                    incorrect_responses.append({'Response ID': row['Response ID'], 'File Name': csv_file})
+                    response = {'Response ID': row['Response ID'], 'File Name': csv_file}
+                    if prolific_id_column:
+                        response['Prolific ID'] = row[prolific_id_column]
+                    else:
+                        response['Prolific ID'] = None
+                    incorrect_responses.append(response)
     
     return incorrect_responses
 
 # Get the incorrect responses
-incorrect_responses = check_csv_files(file_path, csv_files, keyword)
+incorrect_responses = check_csv_files(file_path, csv_files, attention_keyword, prolific_id_keyword)
 
 # Create a DataFrame for the incorrect responses
 incorrect_responses_df = pd.DataFrame(incorrect_responses)
