@@ -7,7 +7,44 @@ output: html_document
 
 ```{r}
 #attention check
+library(dplyr)
+# here is the file list
+file_list<- c("Day_10_LVC_Afternoon_Survey_June_28_2024_23_12.csv  Day_3_LVC_Midday_Survey_June_28_2024_22_58.csv",
+              "Day_7_LVC_Evening_Survey_June_28_2024_23_08.csv","Day_10_LVC_Evening_Survey_June_28_2024_23_13.csv",
+              "Day_4_LVC_Afternoon_Survey_June_28_2024_23_01.csv","Day_7_LVC_Midday_Survey_June_28_2024_23_08.csv",
+              "Day_10_LVC_Midday_Survey_June_28_2024_23_13.csv","Day_4_LVC_Evening_Survey_June_28_2024_23_02.csv",
+              "Day_8_LVC_Afternoon_Survey_June_28_2024_23_09.csv","Day_1_LVC_Afternoon_Survey_June_28_2024_22_53.csv",
+              "Day_4_LVC_Midday_Survey_June_28_2024_23_02.csv","Day_8_LVC_Evening_Survey_June_28_2024_22_02.csv",
+              "Day_1_LVC_Evening_Survey_June_28_2024_22_54.csv"," Day_5_LVC_Afternoon_Survey_June_28_2024_23_03.csv",
+              "Day_8_LVC_Evening_Survey_June_28_2024_23_10.csv","Day_1_LVC_Midday_Survey_June_28_2024_21_59.csv",
+              "Day_5_LVC_Evening_Survey_June_28_2024_23_04.csv","Day_8_LVC_Midday_Survey_June_28_2024_23_10.csv",
+              "Day_2_LVC_Afternoon_Survey_June_28_2024_22_56.csv","Day_5_LVC_Midday_Survey_June_28_2024_23_04.csv",
+              "Day_9_LVC_Afternoon_Survey_June_28_2024_23_11.csv","Day_2_LVC_Evening_Survey_June_28_2024_22_57.csv",
+              "Day_6_LVC_Afternoon_Survey_June_28_2024_23_05.csv","Day_9_LVC_Evening_Survey_June_28_2024_23_11.csv",
+              "Day_2_LVC_Midday_Survey_June_28_2024_22_56.csv","Day_6_LVC_Evening_Survey_June_28_2024_23_05.csv",
+              "Day_9_LVC_Midday_Survey_June_28_2024_23_12.csv","Day_3_LVC_Afternoon_Survey_June_28_2024_22_59.csv",
+              "Day_6_LVC_Midday_Survey_June_28_2024_23_06.csv","Day_3_LVC_Evening_Survey_June_28_2024_22_59.csv",
+              "Day_7_LVC_Afternoon_Survey_June_28_2024_23_07.csv")
 
+# Define the file path
+file_path <- 'C:/Users/timothy/OneDrive/Documents/temp/'
+
+df_a <- read.csv(file = 'C:/Users/timothy/OneDrive/Documents/temp/')
+
+"To ensure that you are paying attention"
+
+
+# Read the CSV file
+  data <- read.csv(full_path, header = FALSE)
+  
+  # Set the second row as the header
+  names(data) <- data[2, ]
+  
+  # Remove the first and third rows
+  data <- data[-c(1, 3), ]
+  
+  # Reset the row indices
+  rownames(data) <- NULL
 
 
 
