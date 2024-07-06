@@ -46,8 +46,26 @@ df_a <- read.csv(file = 'C:/Users/timothy/OneDrive/Documents/temp/')
   # Reset the row indices
   rownames(data) <- NULL
 
+```
+
+```{r}
+library(dplyr)
 
 
+# Reading the CSV files with specific column types
+dataa <- read.csv(file = 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\base.csv', stringsAsFactors = FALSE)
+datab <- read.csv(file = 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\humi_narc_07052024.csv', stringsAsFactors = FALSE)
+
+# Ensure start date and end date columns are treated as strings
+dataa$start_date <- as.character(dataa$start_date)
+dataa$end_date <- as.character(dataa$end_date)
+
+# Performing a full join to keep all cases from both files
+df <- full_join(dataa, datab, by = "CEO_ID")
+
+# Writing the merged data to a CSV file
+write.csv(df, "C:\\Users\\timothy\\OneDrive\\Documents\\temp\\merged.csv", na = '', row.names = FALSE)
+rm(list=ls())
 ```
 
 
