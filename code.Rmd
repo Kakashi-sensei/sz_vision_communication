@@ -53,18 +53,21 @@ library(dplyr)
 
 
 # Reading the CSV files with specific column types
-dataa <- read.csv(file = 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\base.csv', stringsAsFactors = FALSE)
-datab <- read.csv(file = 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\humi_narc_07052024.csv', stringsAsFactors = FALSE)
-
-# Ensure start date and end date columns are treated as strings
-dataa$start_date <- as.character(dataa$start_date)
-dataa$end_date <- as.character(dataa$end_date)
-
+dataa <- read.csv(file = 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\Final_sample_0706.csv', stringsAsFactors = FALSE)
+datab <- read.csv(file = 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\humi_nar_0706.csv', stringsAsFactors = FALSE)
+datac <- read.csv(file = 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\IDs_with_yearly.csv', stringsAsFactors = FALSE)
 # Performing a full join to keep all cases from both files
 df <- full_join(dataa, datab, by = "CEO_ID")
 
 # Writing the merged data to a CSV file
-write.csv(df, "C:\\Users\\timothy\\OneDrive\\Documents\\temp\\merged.csv", na = '', row.names = FALSE)
+write.csv(df, "C:\\Users\\timothy\\OneDrive\\Documents\\temp\\joined_0706.csv", na = '', row.names = FALSE)
+
+onlyinsample <- dataa %>%
+  filter(!(CEO_ID %in% datac$CEO_ID))
+onlyinperfor <- datac %>%
+  filter(!(CEO_ID %in% dataa$CEO_ID))
+write.csv(onlyinsample, "C:\\Users\\timothy\\OneDrive\\Documents\\temp\\onlyinsample.csv", na = '', row.names = FALSE)
+write.csv(onlyinperfor, "C:\\Users\\timothy\\OneDrive\\Documents\\temp\\onlyinperfor.csv", na = '', row.names = FALSE)
 rm(list=ls())
 ```
 
