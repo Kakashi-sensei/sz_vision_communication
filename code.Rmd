@@ -71,4 +71,80 @@ write.csv(onlyinperfor, "C:\\Users\\timothy\\OneDrive\\Documents\\temp\\onlyinpe
 rm(list=ls())
 ```
 
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(readr)
 
+# Load the long.csv and short.csv files
+long_df <- read.csv('C:\\Users\\timothy\\OneDrive\\Documents\\temp\\long.csv', stringsAsFactors = FALSE)
+
+short_df <- read.csv('C:\\Users\\timothy\\OneDrive\\Documents\\temp\\short.csv', stringsAsFactors = FALSE)
+
+# Perform the filtering based on the combination of firmid, ceoid, and year
+long_filtered_df <- long_df %>%
+  inner_join(short_df %>% select(firmid, ceoid, year), by = c("firmid", "ceoid", "year"))
+
+rm(long_df)
+rm(short_df)
+
+# Calculate roa-1 by arranging data by firmid and year, then using lag() function
+long_filtered_df <- long_filtered_df %>%
+  arrange(firmid, year) %>% 
+  group_by(firmid) %>%
+  mutate(roa_minus_1 = lag(roa, order_by = year))
+
+# Load the more4longs.csv file
+more4longs_df <- read.csv('C:\\Users\\timothy\\OneDrive\\Documents\\temp\\more4longs.csv', stringsAsFactors = FALSE)
+
+# Merge the board_director_women_percentage from more4longs.csv into long_filtered_df
+long_filtered_df <- long_filtered_df %>%
+  left_join(more4longs_df %>% select(firmid, ceoid, year, board_director_women_percentage), 
+            by = c("firmid", "ceoid", "year"))
+
+# Merge the prior_year__ROA from more4longs.csv into long_filtered_df
+long_filtered_df <- long_filtered_df %>%
+  left_join(more4longs_df %>% select(firmid, ceoid, year, prior_year__ROA), 
+            by = c("firmid", "ceoid", "year"))
+
+# Fill missing values of roa_minus_1 with prior_year__ROA based on the same firmid, ceoid, year
+long_filtered_df <- long_filtered_df %>%
+  mutate(roa_minus_1 = ifelse(is.na(roa_minus_1), prior_year__ROA, roa_minus_1))
+
+# Drop the prior_year__ROA column as it is no longer needed
+long_filtered_df <- long_filtered_df %>% select(-prior_year__ROA)
+
+rm(more4longs_df)
+
+# Save the updated dataframe to a new CSV file
+write.csv(long_filtered_df, 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\long_filtered_with_roa_minus.csv', row.names = FALSE)
+
+rm(list=ls())
+```
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+
+# Define file paths
+sic_file <- 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\SIC.csv'
+ceo_demographics_file <- 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\CEO_demographics.csv'
+output_file <- 'C:\\Users\\timothy\\OneDrive\\Documents\\temp\\CEO_demographics_updated.csv'
+
+# Read the SIC and CEO_demographics datasets
+SIC <- read.csv(sic_file)
+CEO_demographics <- read.csv(ceo_demographics_file)
+
+# Inspect the first few rows of each dataframe (optional)
+# head(SIC)
+# head(CEO_demographics)
+
+# Merge the datasets based on the 'company' column
+CEO_demographics_updated <- CEO_demographics %>%
+  left_join(SIC %>% select(company, SIC), by = "company")
+
+# Save the updated dataset to a new CSV file without writing NA values
+write.csv(CEO_demographics_updated, output_file, row.names = FALSE, na = "")
+
+
+```
