@@ -146,5 +146,64 @@ CEO_demographics_updated <- CEO_demographics %>%
 # Save the updated dataset to a new CSV file without writing NA values
 write.csv(CEO_demographics_updated, output_file, row.names = FALSE, na = "")
 
+rm(list=ls())
+```
 
+```{r}
+# Load required library
+library(dplyr)
+
+# Read the CSV files
+jap_sample <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/JAP_sample_01.csv")
+distance <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/distance.csv")
+
+# Select only the required columns from the distance dataset
+distance_subset <- distance %>% 
+  select(firmid, distance_to_metropolitan_in_kilometers)
+
+# Merge the datasets based on firmid, only adding the desired column
+merged_data <- left_join(jap_sample, distance_subset, by = "firmid")
+
+# Write the merged dataset to a new CSV file
+write.csv(merged_data, "C:/Users/timothy/OneDrive/Documents/temp/JAP_sample_01_with_distance.csv", row.names = FALSE)
+
+rm(list=ls())
+```
+
+```{r}
+# Load required library
+library(dplyr)
+
+# Read the CSV files
+JAP_sample_00_updated_04262023 <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/JAP_sample_00_updated_04262023.csv",na.strings = "")
+JAP_CEO <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/JAP_CEO.csv",na.strings = "")
+
+# Select only the required columns from the distance dataset
+JAP_CEO_subset <- JAP_CEO %>% 
+  select(ceoid, CEO_birthcountry, country_headquater, difference_code)
+
+# Merge the datasets based on firmid, only adding the desired column
+merged_data <- left_join(JAP_sample_00_updated_04262023, JAP_CEO_subset, by = "ceoid")
+
+# Write the merged dataset to a new CSV file
+write.csv(merged_data, "C:/Users/timothy/OneDrive/Documents/temp/JAP_sample_00_updated_04262023_with_birthinfo.csv", row.names = FALSE, na = "")
+
+rm(list=ls())
+```
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+
+# Load the long.csv and short.xlsx files
+short_df <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/JAP_sample_01_with_distance.csv", na.strings = "")
+long_df <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/JAP_sample_00_updated_04262023_with_birthinfo.csv", na.strings = "")
+
+# Perform the filtering based on the combination of firmid, ceoid, and year
+long_filtered_df <- long_df %>%
+  inner_join(short_df %>% select(firmid, ceoid, year), by = c("firmid", "ceoid", "year"))
+
+# Save the result to a new CSV file
+write.csv(long_filtered_df, "C:/Users/timothy/OneDrive/Documents/temp/JAP_sample_00_updated_04262023_with_birthinfo_short.csv", row.names = FALSE, na = "")
+rm(list=ls())
 ```
