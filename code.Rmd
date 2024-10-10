@@ -225,7 +225,7 @@ write.csv(common_cases_2530, "C:/Users/timothy/OneDrive/Documents/temp/common_ca
 
 # Check for cases where T_ID is present in both files
 common_cases_2530 <- inner_join(df_2530, df_CF, by = "T_ID")
-
+common_cases_5560 <- inner_join(df_5560, df_CF, by = "T_ID")
 # Save the result to a new CSV file
 write.csv(common_cases_5560, "C:/Users/timothy/OneDrive/Documents/temp/common_cases_5560.csv", row.names = FALSE, na = "")
 rm(list=ls())
