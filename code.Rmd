@@ -207,3 +207,26 @@ long_filtered_df <- long_df %>%
 write.csv(long_filtered_df, "C:/Users/timothy/OneDrive/Documents/temp/JAP_sample_00_updated_04262023_with_birthinfo_short.csv", row.names = FALSE, na = "")
 rm(list=ls())
 ```
+
+```{r}
+# Load the necessary package
+library(dplyr)
+
+# Read the CSV files
+df_2530 <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/MGT_2530.csv", na.strings = "")
+df_5560 <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/MGT_5560.csv", na.strings = "")
+df_CF <- read.csv("C:/Users/timothy/OneDrive/Documents/temp/Career_Fair.csv", na.strings = "")
+
+# Check for cases where T_ID is present in both files
+common_cases_2530 <- inner_join(df_2530, df_CF, by = "T_ID")
+
+# Save the result to a new CSV file
+write.csv(common_cases_2530, "C:/Users/timothy/OneDrive/Documents/temp/common_cases_2530.csv", row.names = FALSE, na = "")
+
+# Check for cases where T_ID is present in both files
+common_cases_2530 <- inner_join(df_2530, df_CF, by = "T_ID")
+
+# Save the result to a new CSV file
+write.csv(common_cases_5560, "C:/Users/timothy/OneDrive/Documents/temp/common_cases_5560.csv", row.names = FALSE, na = "")
+rm(list=ls())
+```
