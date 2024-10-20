@@ -259,3 +259,22 @@ print(df_filled)
 write_csv(df_filled, "C:/Users/timothy/OneDrive/Documents/temp/ForbesGlobal_2018_2024_filled.csv")
 
 ```
+
+```{r}
+# check only in B
+# Set file paths
+new_company_file <- "C:/Users/timothy/OneDrive/Documents/temp/New_nonUS_company.csv"
+old_company_file <- "C:/Users/timothy/OneDrive/Documents/temp/Old_nonUS_company.csv"
+
+# Read the CSV files
+new_company <- read.csv(new_company_file)
+old_company <- read.csv(old_company_file)
+
+# Add the new variable 'Only_New' to 'New_USA_company'
+new_company$Only_New <- ifelse(new_company$Company %in% old_company$Company, "N", "Y")
+
+# Save the updated 'New_USA_company' with the new variable
+write.csv(new_company, "C:/Users/timothy/OneDrive/Documents/temp/New_nonUSA_company_updated.csv", row.names = FALSE)
+
+```
+
