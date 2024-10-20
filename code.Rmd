@@ -230,3 +230,32 @@ common_cases_5560 <- inner_join(df_5560, df_CF, by = "T_ID")
 write.csv(common_cases_5560, "C:/Users/timothy/OneDrive/Documents/temp/common_cases_5560.csv", row.names = FALSE, na = "")
 rm(list=ls())
 ```
+
+```{r}
+# add industry values for cases
+# Load necessary libraries
+library(dplyr)
+library(tidyr)
+library(readr)
+
+# Define the file path
+file_path <- "C:/Users/timothy/OneDrive/Documents/temp/ForbesGlobal_2018_2024.csv"
+
+# Load the CSV file
+df <- read_csv(file_path)
+
+# Fill missing Industry values based on existing values for the same Company
+# Leave it empty if no value is found
+df_filled <- df %>%
+  group_by(Company) %>%
+  mutate(Industry = ifelse(is.na(Industry), first(na.omit(Industry)), Industry)) %>%
+  ungroup() %>%
+  mutate(Industry = ifelse(is.na(Industry), "", Industry))  # Replace remaining NAs with empty strings
+
+# View the updated dataframe
+print(df_filled)
+
+# Save the updated dataframe to a new CSV file
+write_csv(df_filled, "C:/Users/timothy/OneDrive/Documents/temp/ForbesGlobal_2018_2024_filled.csv")
+
+```
