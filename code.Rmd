@@ -262,19 +262,26 @@ write_csv(df_filled, "C:/Users/timothy/OneDrive/Documents/temp/ForbesGlobal_2018
 
 ```{r}
 # check only in B
+
 # Set file paths
 new_company_file <- "C:/Users/timothy/OneDrive/Documents/temp/New_nonUSA_company.csv"
 old_company_file <- "C:/Users/timothy/OneDrive/Documents/temp/Old_nonUSA_company.csv"
+# Load the readr package
+library(readr)
 
-# Read the CSV files with proper encoding
-new_company <- read.csv(new_company_file, fileEncoding = "UTF-8", stringsAsFactors = FALSE)
-old_company <- read.csv(old_company_file, fileEncoding = "UTF-8", stringsAsFactors = FALSE)
+# Use readr's read_csv to load the files with better encoding handling
+new_company <- read_csv(new_company_file)
+old_company <- read_csv(old_company_file)
 
-# Clean up potential invalid characters in the 'Company' column
-new_company$Company <- iconv(new_company$Company, from = "UTF-8", to = "ASCII//TRANSLIT")
-old_company$Company <- iconv(old_company$Company, from = "UTF-8", to = "ASCII//TRANSLIT")
+# Convert the 'Company' columns to UTF-8 encoding to handle special characters
+new_company$Company <- iconv(new_company$Company, from = "latin1", to = "UTF-8", sub = "") 
+old_company$Company <- iconv(old_company$Company, from = "latin1", to = "UTF-8", sub = "") 
 
-# Convert the 'Company' columns to lowercase to ignore case during comparison
+# Check for any remaining problematic characters (optional, for inspection)
+new_company$Company[is.na(new_company$Company)]
+old_company$Company[is.na(old_company$Company)]
+
+# Convert 'Company' columns to lowercase for case-insensitive comparison
 new_company$Company_lower <- tolower(new_company$Company)
 old_company$Company_lower <- tolower(old_company$Company)
 
@@ -285,7 +292,7 @@ new_company$Only_New <- ifelse(new_company$Company_lower %in% old_company$Compan
 new_company$Company_lower <- NULL
 
 # Save the updated 'New_USA_company' with the new variable
-write.csv(new_company, "C:/Users/timothy/OneDrive/Documents/temp/New_nonUSA_company_updated.csv", row.names = FALSE)
-
+write_csv(new_company, "C:/Users/timothy/OneDrive/Documents/temp/New_nonUSA_company_updated.csv")
+rm(list=ls())
 ```
 
